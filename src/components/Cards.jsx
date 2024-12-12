@@ -1,24 +1,24 @@
 import PropTypes from 'prop-types';
 import { MdOutlineShoppingCart } from "react-icons/md";
-// import { useDispatch } from 'react-redux';
-// import { addToCart } from '../redux/cartSlice';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../redux/cartSlice';
 import { Link } from 'react-router-dom';
 
 function Cards({ product }) {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // const handleAddToCart = () => {
-  //   const productToAdd = {
-  //     id: product.id,
-  //     name: product.title,
-  //     image: product.image,
-  //     price: product.price,
-  //     quantity: 1,
-  //   };
+  const handleAddToCart = () => {
+    const productToAdd = {
+      id: product.id,
+      name: product.title,
+      image: product.image,
+      price: product.price,
+      quantity: 1,
+    };
 
-  //   console.log('Menambahkan produk ke keranjang:', productToAdd);
-  //   dispatch(addToCart(productToAdd));
-  // };
+    console.log('Menambahkan produk ke keranjang:', productToAdd);
+    dispatch(addToCart(productToAdd));
+  };
 
   return (
     <div className="border rounded p-4 bg-white transform transition-transform duration-300 hover:scale-105">
@@ -38,7 +38,7 @@ function Cards({ product }) {
         </Link>
         <button
           className="p-2 px-4 mx-2 bg-red-700 hover:bg-red-500 text-white font-bold rounded"
-          // onClick={handleAddToCart}
+          onClick={handleAddToCart}
         >
           <MdOutlineShoppingCart />
         </button>
