@@ -1,3 +1,6 @@
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { Link } from 'react-router-dom';
+
 
 function Navbar (){
     return(
@@ -11,10 +14,13 @@ function Navbar (){
                 </a>
 
                 <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-                    <a className="mr-5 hover:text-gray-900">First Link</a>
-                    <a className="mr-5 hover:text-gray-900">Second Link</a>
+                    <Link to="/" className="mr-5 hover:text-gray-900">Home</Link>
+                    <a className="mr-5 hover:text-gray-900">Shopping</a>
                    
                 </nav>
+                <Link to="/cart" className=" hover:text-blue-600 text-2xl px-6 font-bold">
+                    <MdOutlineShoppingCart />
+                </Link>
                 <button className="inline-flex items-center bg-white text-red-600  font-bold shadow-md shadow-gray-500 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
                     Login
                    
