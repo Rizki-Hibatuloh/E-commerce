@@ -6,8 +6,8 @@ function Navbar() {
     const cartItemCount = useSelector((state) => state.cart.cartItemCount);
 
     return (
-        <header className="text-white body-font bg-red-600">
-            <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+        <header className="text-white body-font bg-red-600 sticky top-0 z-50 shadow-lg">
+            <div className="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center">
           
                 <Link to="/" className="flex title-font font-medium items-center text-white mb-4 md:mb-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10 text-red-600 p-2 bg-white rounded-full" viewBox="0 0 24 24">

@@ -1,19 +1,14 @@
-import { BrowserRouter , Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import CartPage from './pages/CartPage';
+// src/App.jsx
+import { Outlet } from 'react-router-dom'; 
 import Navbar from './components/Navbar';
 
 function App() {
-
   return (
-    <BrowserRouter>
+    <div>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/cart" element={<CartPage />} />
-      </Routes>
-    </BrowserRouter>
-  )
+      <Outlet />
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -6,7 +6,7 @@ import Cards from "../components/Cards";
 function HomePage() {
     const dispatch = useDispatch();
     const products = useSelector(state => state.product.products); // Access the products array
-    console.log(products);
+   
 
     useEffect(() => {
         dispatch(fetchProducts()); // Dispatch action to fetch products
