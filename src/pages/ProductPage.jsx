@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { addToCart } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import PopupMessage from "../components/PopupMessage";
@@ -22,10 +22,10 @@ function ProductPage() {
   const [popupType, setPopupType] = useState("success");
 
   // Update localStorage when quantity or size changes
-  useEffect(() => {
-    localStorage.setItem(`quantity-${id}`, quantity);
-    localStorage.setItem(`size-${id}`, size);
-  }, [id, quantity, size]);
+  // useEffect(() => {
+  //   localStorage.setItem(`quantity-${id}`, quantity);
+  //   localStorage.setItem(`size-${id}`, size);
+  // }, [id, quantity, size]);
 
   if (loading) return <div>Memuat produk...</div>;
   if (error) return <div>Error: {error}</div>;
