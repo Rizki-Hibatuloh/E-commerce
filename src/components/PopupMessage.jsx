@@ -15,10 +15,11 @@ function PopupMessage({ message, type = "success", isVisible, onClose }) {
 
   return (
     <div
-      className={`fixed top-10 right-10 p-4 rounded-lg shadow-lg text-white ${
+      className={`fixed z-9999 top-10 right-10 p-4 rounded-lg shadow-lg text-white ${
         type === "success" ? "bg-green-500" : "bg-red-500"
       }`}
-    >
+      style={{ zIndex: 9999 }} 
+    > 
       {message}
     </div>
   );

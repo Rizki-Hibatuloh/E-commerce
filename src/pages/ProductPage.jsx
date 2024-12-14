@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { addToCart } from "../redux/cartSlice";  // Assuming updateQuantity action exists
-import PopupMessage from "../components/PopupMessage";
+import { addToCart } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
+import PopupMessage from "../components/PopupMessage";
 
 function ProductPage() {
   const { id } = useParams();
@@ -21,8 +21,6 @@ function ProductPage() {
   const [popupMessage, setPopupMessage] = useState("");
   const [popupType, setPopupType] = useState("success");
 
-
-
   // Update localStorage when quantity or size changes
   useEffect(() => {
     localStorage.setItem(`quantity-${id}`, quantity);
@@ -36,19 +34,21 @@ function ProductPage() {
   if (!product) return <div>Produk tidak ditemukan</div>;
 
   const handleQuantityChange = (action) => {
-    if (action === 'increment' && quantity < 20) {
+    if (action === "increment" && quantity < 20) {
       setQuantity(quantity + 1);
-    } else if (action === 'decrement' && quantity > 1) {
+    } else if (action === "decrement" && quantity > 1) {
       setQuantity(quantity - 1);
     }
   };
 
   const handleAddToCart = () => {
+    // Validasi ukuran
     if (!size) {
       setPopupMessage("Silakan pilih ukuran produk!");
       setPopupType("error");
       setPopupVisible(true);
-      return;
+      console.log("Popup Error muncul");
+      return; 
     }
 
     const productToAdd = {
@@ -61,10 +61,12 @@ function ProductPage() {
     };
 
     // Menambahkan produk ke Redux store
+    console.log("Size valid, menambahkan produk ke keranjang");
     dispatch(addToCart(productToAdd));
     setPopupMessage("Item berhasil ditambahkan ke keranjang!");
     setPopupType("success");
     setPopupVisible(true);
+    console.log("Popup Success muncul");
   };
 
   const handleCheckout = () => {
