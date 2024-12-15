@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchProducts } from "../redux/productSlice";
 import Cards from "../components/Cards";
+import { FaSpinner } from "react-icons/fa";
 
 function HomePage() {
     const dispatch = useDispatch();
@@ -24,7 +25,9 @@ function HomePage() {
                         <Cards key={product.id} product={product} />
                     ))
                 ) : (
-                    <div>Loading...</div> // Loading state when products are being fetched
+                    <div className='flex justify-center items-center p-3 mt-20'>
+                        <FaSpinner className="animate-spin"/>
+                    </div> // Loading state when products are being fetched
                 )}
             </div>
         </section>

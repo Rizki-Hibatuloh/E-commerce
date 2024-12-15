@@ -4,6 +4,7 @@ import { useState } from "react";
 import { addToCart } from "../redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 import PopupMessage from "../components/PopupMessage";
+import { FaSpinner } from "react-icons/fa";
 
 function ProductPage() {
   const { id } = useParams();
@@ -21,17 +22,14 @@ function ProductPage() {
   const [popupMessage, setPopupMessage] = useState("");
   const [popupType, setPopupType] = useState("success");
 
-  // Update localStorage when quantity or size changes
-  // useEffect(() => {
-  //   localStorage.setItem(`quantity-${id}`, quantity);
-  //   localStorage.setItem(`size-${id}`, size);
-  // }, [id, quantity, size]);
-
-  if (loading) return <div>Memuat produk...</div>;
-  if (error) return <div>Error: {error}</div>;
+ 
+  if (loading) return <div className='flex justify-center items-center p-3 mt-20'>
+  <FaSpinner className="animate-spin w-10 h-10"/>
+</div>
+  if (error) return <div  className='flex justify-center items-center p-3'>Error: {error}</div>;
 
   const product = products.find((item) => item.id === parseInt(id));
-  if (!product) return <div>Produk tidak ditemukan</div>;
+  if (!product) return <div  className='flex justify-center items-center p-3'>Product Not Found</div>;
 
   const handleQuantityChange = (action) => {
     if (action === "increment" && quantity < 20) {
