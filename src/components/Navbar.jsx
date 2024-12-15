@@ -7,20 +7,31 @@ function Navbar() {
 
     // Fungsi untuk scroll ke bagian hero
     const scrollToHero = () => {
-        const heroSection = document.getElementById('hero');
-        if (heroSection) {
-            heroSection.scrollIntoView({
-                behavior: 'smooth' });
+        if (window.location.pathname !== "/") {
+            window.location.href = "/"; // Pindah ke homepage jika bukan di halaman home
         }
+        setTimeout(() => {
+            const heroSection = document.getElementById("hero");
+            if (heroSection) {
+                heroSection.scrollIntoView({ behavior: "smooth" });
+            }
+        }, 100); // Delay untuk memastikan halaman sudah termuat
     };
+
 
     // Fungsi untuk scroll ke bagian shopping
     const scrollToShopping = () => {
-        const shoppingSection = document.getElementById('shopping');
+    if (window.location.pathname !== "/") {
+        window.location.href = "/"; // Pindah ke homepage jika bukan di halaman home
+    }
+    setTimeout(() => {
+        const shoppingSection = document.getElementById("shopping");
         if (shoppingSection) {
-            shoppingSection.scrollIntoView({ behavior: 'smooth' });
+            shoppingSection.scrollIntoView({ behavior: "smooth" });
         }
-    };
+    }, 100); // Delay untuk memastikan halaman sudah termuat
+};
+
 
     return (
         <header className="text-white body-font bg-red-600 sticky top-0 z-50 shadow-lg">
@@ -52,10 +63,8 @@ function Navbar() {
                     )}
                 </div>
 
-                <Link to="/login">
-                    <button className="inline-flex items-center bg-white text-red-600 font-bold shadow-md shadow-gray-500 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+                <Link to="/login" className="inline-flex items-center bg-white text-red-600 font-bold shadow-md shadow-gray-500 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
                         Login
-                    </button>
                 </Link>
             </div>
         </header>

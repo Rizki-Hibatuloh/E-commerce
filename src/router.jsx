@@ -4,6 +4,7 @@ import App from "./App";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
+import LoginPage  from "./pages/LoginPage";
 
 // Mendefinisikan router untuk aplikasi
 export const router = createBrowserRouter([
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
         path: "/cart", // Route untuk halaman keranjang
         element: <CartPage />,
       },
+      {
+        path: "/login", // Route untuk halaman login
+        element: <LoginPage />,
+      }, 
     ],
   },
 ]);
