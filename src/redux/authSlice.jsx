@@ -20,9 +20,11 @@ export const login = createAsyncThunk(
       // Simpan token ke localStorage
       localStorage.setItem('token', data.token);
 
-      return data; // Mengembalikan data (termasuk token)
+      return {
+        token: data.token,
+        user: { username }, // Simpan data user dari input login
+      };
     } catch (error) {
-      // Mengembalikan error ke rejected state
       return rejectWithValue(error.message || 'Something went wrong');
     }
   }
@@ -54,7 +56,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.token = action.payload.token; // Simpan token dari payload
-        state.user = action.payload.user || null; // Simpan user jika tersedia
+        state.user = action.payload.user; // Simpan user dari payload
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
