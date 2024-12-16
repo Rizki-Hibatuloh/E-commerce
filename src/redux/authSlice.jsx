@@ -17,8 +17,9 @@ export const login = createAsyncThunk(
 
       const data = await response.json();
 
-      // Simpan token ke localStorage
+      // Simpan token dan user ke localStorage
       localStorage.setItem('token', data.token);
+      localStorage.setItem('login', JSON.stringify({ username })); // Simpan username saja, lebih sederhana
 
       return {
         token: data.token,
@@ -34,7 +35,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     token: localStorage.getItem('token') || null, // Memuat token dari localStorage
-    user: null, // Data user (jika ada)
+    user: JSON.parse(localStorage.getItem('login'))?.username || null, // Memuat username user dari localStorage
     status: 'idle', // idle, loading, succeeded, failed
     error: null, // Menyimpan pesan error
   },
@@ -45,6 +46,7 @@ const authSlice = createSlice({
       state.status = 'idle';
       state.error = null;
       localStorage.removeItem('token'); // Hapus token dari localStorage
+      localStorage.removeItem('login'); // Hapus informasi login dari localStorage
     },
   },
   extraReducers: (builder) => {
@@ -54,6 +56,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log('Login succeeded:', action.payload);
         state.status = 'succeeded';
         state.token = action.payload.token; // Simpan token dari payload
         state.user = action.payload.user; // Simpan user dari payload

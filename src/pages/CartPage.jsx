@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { removeFromCart, updateQuantity } from '../redux/cartSlice';
 
 function CartPage() {
@@ -9,8 +11,11 @@ function CartPage() {
         
     // Mengambil data produk dari Redux state
     const cartItems = useSelector((state) => state.cart.products);
+    const token = useSelector((state) => state.auth.token);
+    const navigate = useNavigate();
 
     const [selectedItems, setSelectedItems] = useState([]);
+
 
     // Menghitung total harga
     const totalPrice = cartItems
@@ -54,6 +59,12 @@ function CartPage() {
         }
     };
 
+    useEffect(() => {
+        // Redirect jika user tidak login
+        if (!token) {
+          navigate('/login');
+        }
+      }, [token, navigate]);
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>

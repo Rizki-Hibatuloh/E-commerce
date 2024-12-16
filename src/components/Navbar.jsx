@@ -8,6 +8,7 @@ function Navbar() {
     const dispatch = useDispatch();
     const cartItemCount = useSelector((state) => state.cart.cartItemCount);
     const user = useSelector(selectUser); // Ambil data user dari Redux
+    console.log("Current user:", user);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
     const handleLogout = () => {

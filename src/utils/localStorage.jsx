@@ -14,13 +14,15 @@ const localStorageMiddleware = (storeAPI) => (next) => (action) => {
     localStorage.setItem('products', JSON.stringify(state.product.products));
   }
 
-  // Simpan informasi login, termasuk token jika ada
-  if (state.login) {
-    localStorage.setItem('login', JSON.stringify(state.login));
+  // Simpan informasi login (token dan username)
+  if (state.auth) {
+    // Simpan username dan token secara terpisah agar lebih efisien
+    if (state.auth.token) {
+      localStorage.setItem('token', state.auth.token);
+    }
 
-    // Simpan token secara khusus di localStorage
-    if (state.login.token) {
-      localStorage.setItem('token', state.login.token);
+    if (state.auth.user) {
+      localStorage.setItem('login', JSON.stringify({ username: state.auth.user.username }));
     }
   }
 

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { useNavigate, Link, useLocation } from 'react-router-dom'; 
 import { login, selectLoading, selectError, selectToken } from '../redux/authSlice'; // Import login dari authSlice
 
 function LoginPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation(); // Menambahkan useLocation untuk mendapatkan state dari URL
 
     // Selectors
     const loading = useSelector(selectLoading);
@@ -17,8 +18,10 @@ function LoginPage() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
+    // Handle form submit
     const handleSubmit = (e) => {
         e.preventDefault();
+        
         if (!username || !password) {
             setMessage('Username dan password harus diisi');
             return;
@@ -32,10 +35,12 @@ function LoginPage() {
             setMessage('Username atau password salah.');
         } else if (token) {
             setMessage('Login berhasil!');
-            setTimeout(() => navigate('/'), 1000); // Delay 1 detik
+
+            // Redirect ke halaman sebelumnya atau halaman utama jika tidak ada halaman sebelumnya
+            const redirectPath = location.state?.from || '/'; // Ambil state.from atau ke '/'
+            setTimeout(() => navigate(redirectPath), 1000); // Delay 1 detik sebelum redirect
         }
-    }, [error, token, navigate]);
-    
+    }, [error, token, navigate, location.state]);
 
     return (
         <section className="bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 w-screen h-screen flex justify-center items-center">
@@ -79,7 +84,7 @@ function LoginPage() {
                 </form>
 
                 <div className="mt-4 text-center">
-                    <Link to="/login" className="text-blue-500 hover:underline">
+                    <Link to="/register" className="text-blue-500 hover:underline">
                         Dont have an account? Register here.
                     </Link>
                 </div>
