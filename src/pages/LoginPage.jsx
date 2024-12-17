@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link, useLocation } from 'react-router-dom'; 
-import { login, selectLoading, selectError, selectToken } from '../redux/authSlice'; // Import login dari authSlice
+import { login, selectLoading, selectError, selectToken } from '../redux/authSlice';
 
 function LoginPage() {
     const dispatch = useDispatch();
@@ -36,46 +36,49 @@ function LoginPage() {
         } else if (token) {
             setMessage('Login berhasil!');
 
-            // Redirect ke halaman sebelumnya atau halaman utama jika tidak ada halaman sebelumnya
-            const redirectPath = location.state?.from || '/'; // Ambil state.from atau ke '/'
+            
+            const redirectPath = location.state?.from || '/'; 
             setTimeout(() => navigate(redirectPath), 1000); // Delay 1 detik sebelum redirect
         }
     }, [error, token, navigate, location.state]);
 
     return (
-        <section className="bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 w-screen h-screen flex justify-center items-center">
-            <main className="bg-white p-10 rounded-2xl shadow-2xl w-[450px] border border-gray-100">
+        <section className="bg-white w-screen h-screen flex justify-center items-center">
+            <div className="items-center text-9xl font-bold text-red-600 p-5 mr-10">
+                <span>PUREBUY</span>
+            </div> 
+            <main className="bg-gray-200 p-10 rounded-2xl shadow-2xl  shadow-black w-[450px] border border-gray-100">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
+                    <h2 className="text-4xl font-bold text-gray-500">Welcome</h2>
                     <p className="text-gray-500 mt-2">Sign in to continue</p>
                 </div>
                 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-6">
-                        <label htmlFor="username" className="block text-gray-700 mb-2">Username</label>
+                        <label htmlFor="username" className="block text-gray-500 mb-2">Username</label>
                         <input
                             type="text"
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                             required
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block text-gray-700 mb-2">Password</label>
+                        <label htmlFor="password" className="block text-gray-500 mb-2">Password</label>
                         <input
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                             required
                         />
                     </div>
                     <button
                         type="submit"
-                        className={`w-full p-3 text-white rounded-lg ${loading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'}`}
+                        className={`w-full p-3 text-white rounded-lg ${loading ? 'bg-gray-400' : 'bg-red-500 hover:bg-blue-600'}`}
                         disabled={loading}
                     >
                         {loading ? 'Loading...' : 'Login'}
@@ -84,7 +87,7 @@ function LoginPage() {
                 </form>
 
                 <div className="mt-4 text-center">
-                    <Link to="/register" className="text-blue-500 hover:underline">
+                    <Link to="/register" className="text-red-500 hover:underline">
                         Dont have an account? Register here.
                     </Link>
                 </div>

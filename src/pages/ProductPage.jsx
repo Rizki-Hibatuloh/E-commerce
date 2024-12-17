@@ -4,6 +4,8 @@ import { useState } from "react";
 import { addToCart } from "../redux/cartSlice";
 import PopupMessage from "../components/PopupMessage";
 import { FaSpinner } from "react-icons/fa";
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { FaStar, FaStarHalfAlt } from 'react-icons/fa'; // Import ikon bintang
 
 function ProductPage() {
   const { id } = useParams();
@@ -15,7 +17,6 @@ function ProductPage() {
   const token = useSelector((state) => state.auth.token);
 
   const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState("");
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [popupType, setPopupType] = useState("success");
@@ -48,24 +49,16 @@ function ProductPage() {
       return;
     }
 
-    if (!size) {
-      setPopupMessage("Silakan pilih ukuran produk!");
-      setPopupType("error");
-      setPopupVisible(true);
-      return;
-    }
-
     const productToAdd = {
       id: product.id,
       name: product.title,
       image: product.image,
       price: product.price,
-      quantity,
-      size,
+      quantity
     };
 
     dispatch(addToCart(productToAdd));
-    setPopupMessage("Item berhasil ditambahkan ke keranjang!");
+    setPopupMessage("Item successfully added to cart!");
     setPopupType("success");
     setPopupVisible(true);
   };
@@ -78,14 +71,14 @@ function ProductPage() {
     }
 
     // Tampilkan popup checkout
-    setCheckoutMessage("Sedang memproses checkout...");
+    setCheckoutMessage("Processing checkout...");
     setPopupType("success");
     setCheckoutPopupVisible(true);
 
     // Delay 2 detik sebelum menuju halaman checkout
     setTimeout(() => {
-      navigate("/");
-    }, 2000); 
+      navigate("/"); // Menyelesaikan checkout dan redirect
+    }, 2000);
   };
 
   const handleQuantityChange = (action) => {
@@ -94,6 +87,24 @@ function ProductPage() {
     } else if (action === "decrement" && quantity > 1) {
       setQuantity(quantity - 1);
     }
+  };
+
+  // Fungsi untuk menampilkan bintang rating
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating); // Bintang penuh
+    const hasHalfStar = rating % 1 >= 0.5; // Cek apakah ada bintang setengah
+
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(<FaStar key={i} className="text-yellow-400" />); // Bintang penuh
+      } else if (i === fullStars && hasHalfStar) {
+        stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />); // Bintang setengah
+      } else {
+        stars.push(<FaStar key={i} className="text-gray-300" />); // Bintang kosong
+      }
+    }
+    return stars;
   };
 
   return (
@@ -120,27 +131,32 @@ function ProductPage() {
             src={product.image}
           />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+         
+            <div className="flex items-start mb-4 font-semibold">
+              <div className="mr-2 text-base py-1 underline underline-offset-4">
+                {product.rating.rate}
+              </div>
+              |
+              <div className="flex justify-between mx-2 py-2">
+                {renderStars(product.rating.rate)}
+              </div>
+              |
+              <div className="ml-2 py-1 text-gray-600 text-sm underline underline-offset-4">
+                 {product.rating.count} reviews
+              </div> 
+            </div>
             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
               {product.title}
             </h1>
             <p className="leading-relaxed">{product.description}</p>
 
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-              <div className="flex ml-6 items-center">
-                <span className="mr-3">Size</span>
-                <select
-                  value={size}
-                  onChange={(e) => setSize(e.target.value)}
-                  className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10"
-                >
-                  <option value=""> - </option>
-                  <option value="S">S</option>
-                  <option value="M">M</option>
-                  <option value="L">L</option>
-                  <option value="XL">XL</option>
-                </select>
+              <div className="flex mr-6 items-center">
+                <span className="title-font font-medium text-2xl text-gray-900">
+                  ${product.price}
+                </span> 
               </div>
-              <div className="flex items-center gap-4 ml-5">
+              <div className="flex items-center gap-4 ml-8">
                 <button
                   onClick={() => handleQuantityChange("decrement")}
                   className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
@@ -158,19 +174,16 @@ function ProductPage() {
             </div>
 
             <div className="flex">
-              <span className="title-font font-medium text-2xl text-gray-900">
-                ${product.price}
-              </span>
               <div className="ml-auto flex">
                 <button
                   onClick={handleAddToCart}
-                  className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                  className="text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded"
                 >
-                  Add to Cart
+                  <MdOutlineShoppingCart className="w-6 h-6"/>
                 </button>
                 <button
                   onClick={handleCheckout}
-                  className="ml-4 text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded"
+                  className="ml-4 text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-400  rounded"
                 >
                   Checkout
                 </button>

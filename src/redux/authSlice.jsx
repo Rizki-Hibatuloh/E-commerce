@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axiosInstance';
 
 // Login async action
 export const login = createAsyncThunk(
   'auth/login',
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('https://fakestoreapi.com/auth/login', {
+      const response = await axiosInstance.post('/auth/login', {
         username,
         password,
       });
