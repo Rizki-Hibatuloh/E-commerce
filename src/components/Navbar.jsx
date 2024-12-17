@@ -55,7 +55,8 @@ function Navbar() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="2"
-                        className="w-10 h-10 text-red -600 p-2 bg-white rounded-full"
+                        className="w-10 h-10 text-red -600 p-2 bg-white text-red-600 rounded-full"
+                        
                         viewBox="0 0 24 24"
                     >
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
@@ -76,7 +77,7 @@ function Navbar() {
                     <Link to="/cart" className="hover:text-white text-lg px-4">
                         <MdOutlineShoppingCart size={24} />
                     </Link>
-                    {cartItemCount > 0 && (
+                    {user && cartItemCount > 0 && (
                         <span className="absolute top-2.5 right-2.5 bg-white text-red-600 rounded-full text-xs font-bold w-5 h-5 flex items-center justify-center">
                             {cartItemCount}
                         </span>
@@ -90,15 +91,16 @@ function Navbar() {
                             className="inline-flex items-center bg-white text-red-600 font-bold shadow-md shadow-gray-500 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base"
                         >
                             {user.username}
+                            
                         </button>
                         {isDropdownOpen && (
-                            <div className="absolute right-0 mt-2 bg-white rounded shadow-md w-48">
+                            <div className="absolute right-0 mt-2 bg-gray-50 rounded shadow-md w-48">
                                 <div className="px-4 py-2 text-gray-800 font-semibold">
                                     {user.username}
                                 </div>
                                 <button
                                     onClick={handleLogout}
-                                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                                    className="block w-full text-left px-4 py-2 text-red-600 font-semibold hover:bg-gray-200"
                                 >
                                     Logout
                                 </button>
