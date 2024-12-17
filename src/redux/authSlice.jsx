@@ -1,32 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 // Login async action
 export const login = createAsyncThunk(
   'auth/login',
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch('https://fakestoreapi.com/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+      const response = await axios.post('https://fakestoreapi.com/auth/login', {
+        username,
+        password,
       });
 
-      if (!response.ok) {
-        throw new Error('Invalid username or password');
-      }
-
-      const data = await response.json();
-
       // Simpan token dan user ke localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('login', JSON.stringify({ username })); // Simpan username saja, lebih sederhana
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('login', JSON.stringify({ username }));
 
       return {
-        token: data.token,
-        user: { username }, // Simpan data user dari input login
+        token: response.data.token,
+        user: { username },
       };
     } catch (error) {
-      return rejectWithValue(error.message || 'Something went wrong');
+      return rejectWithValue(error.response?.data?.message || 'Something went wrong');
     }
   }
 );
@@ -34,10 +28,10 @@ export const login = createAsyncThunk(
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    token: localStorage.getItem('token') || null, // Memuat token dari localStorage
-    user: JSON.parse(localStorage.getItem('login'))?.username || null, // Memuat username user dari localStorage
-    status: 'idle', // idle, loading, succeeded, failed
-    error: null, // Menyimpan pesan error
+    token: localStorage.getItem('token') || null,
+    user: JSON.parse(localStorage.getItem('login'))?.username || null,
+    status: 'idle',
+    error: null,
   },
   reducers: {
     logout: (state) => {
@@ -45,8 +39,12 @@ const authSlice = createSlice({
       state.user = null;
       state.status = 'idle';
       state.error = null;
-      localStorage.removeItem('token'); // Hapus token dari localStorage
-      localStorage.removeItem('login'); // Hapus informasi login dari localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('login');
+    },
+    setUser:(state, action) => { 
+      state.user = action.payload.user;
+      state.token = action.payload.token;
     },
   },
   extraReducers: (builder) => {
@@ -56,10 +54,9 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        console.log('Login succeeded:', action.payload);
         state.status = 'succeeded';
-        state.token = action.payload.token; // Simpan token dari payload
-        state.user = action.payload.user; // Simpan user dari payload
+        state.token = action.payload.token;
+        state.user = action.payload.user;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
@@ -72,8 +69,7 @@ const authSlice = createSlice({
 export const selectLoading = (state) => state.auth.status === 'loading';
 export const selectError = (state) => state.auth.error;
 export const selectToken = (state) => state.auth.token;
-export const selectUser = (state) => state.auth.user;
+export const selectUser  = (state) => state.auth.user;
 
-// Actions dan reducer
-export const { logout } = authSlice.actions;
+export const { logout, setUser  } = authSlice.actions; // Perbaikan di sini
 export default authSlice.reducer;

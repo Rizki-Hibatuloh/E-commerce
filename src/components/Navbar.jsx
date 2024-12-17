@@ -1,18 +1,36 @@
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout, selectUser } from "../redux/authSlice"; 
-import { useState } from "react";
+import { logout, selectUser , setUser  } from "../redux/authSlice"; 
+import { setCart } from "../redux/cartSlice";
+import { useState, useEffect } from "react";
 
 function Navbar() {
     const dispatch = useDispatch();
     const cartItemCount = useSelector((state) => state.cart.cartItemCount);
-    const user = useSelector(selectUser); // Ambil data user dari Redux
-    console.log("Current user:", user);
+    const user = useSelector(selectUser );
     const [isDropdownOpen, setDropdownOpen] = useState(false);
 
+     // Sinkronisasi Redux Cart dari localStorage saat refresh
+     useEffect(() => {
+        const storedCart = JSON.parse(localStorage.getItem("cart"));
+        if (storedCart) {
+            dispatch(setCart(storedCart));
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        const storedUser  = JSON.parse(localStorage.getItem('login'));
+        const storedToken = localStorage.getItem('token');
+        if (storedUser  && storedUser .username && storedToken) {
+            if (!user) {
+                dispatch(setUser ({ user: storedUser , token: storedToken }));
+            }
+        }
+    }, [dispatch, user]);
+
     const handleLogout = () => {
-        dispatch(logout()); // Logout user
+        dispatch(logout());
     };
 
     const toggleDropdown = () => {
@@ -20,15 +38,10 @@ function Navbar() {
     };
 
     const scrollToSection = (sectionId) => {
-        if (window.location.pathname !== "/") {
-            window.location.href = "/"; // Pindah ke homepage jika bukan di halaman home
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
         }
-        setTimeout(() => {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: "smooth" });
-            }
-        }, 100); // Delay untuk memastikan halaman sudah termuat
     };
 
     return (
@@ -42,7 +55,7 @@ function Navbar() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="2"
-                        className="w-10 h-10 text-red-600 p-2 bg-white rounded-full"
+                        className="w-10 h-10 text-red -600 p-2 bg-white rounded-full"
                         viewBox="0 0 24 24"
                     >
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
@@ -79,10 +92,13 @@ function Navbar() {
                             {user.username}
                         </button>
                         {isDropdownOpen && (
-                            <div className="absolute right-0 mt-2 bg-white rounded shadow-md">
+                            <div className="absolute right-0 mt-2 bg-white rounded shadow-md w-48">
+                                <div className="px-4 py-2 text-gray-800 font-semibold">
+                                    {user.username}
+                                </div>
                                 <button
                                     onClick={handleLogout}
-                                    className="block px-4 py-2 text-red-600 hover:bg-gray-100 w-full text-left"
+                                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
                                 >
                                     Logout
                                 </button>

@@ -66,11 +66,16 @@ const cartSlice = createSlice({
       
       // Update cartItemCount dan simpan ke localStorage
       state.cartItemCount = calculateCartItemCount(state.products);
+      // Di dalam cartSlice
       saveCartToLocalStorage(state.products);
+    },
+    setCart: (state, action) => {
+      state.products = action.payload;
+      state.cartItemCount = calculateCartItemCount(action.payload);
     },
   },
 });
 
-export const { addToCart, removeFromCart, clearCart, updateQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart, updateQuantity, setCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
