@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link, useLocation } from 'react-router-dom'; 
 import { login, selectLoading, selectError, selectToken } from '../redux/authSlice';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+
 
 function LoginPage() {
     const dispatch = useDispatch();
@@ -26,7 +26,7 @@ function LoginPage() {
         if (!username || !password) {
             toast.warn('Username and password are required!', {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2000,
             });
             return;
         }
@@ -38,7 +38,7 @@ function LoginPage() {
         if (error) {
             toast.error('Invalid username or password!', {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 2000,
             });
         } else if (token) {
             toast.success('Login successful! Redirecting...', {
@@ -54,9 +54,7 @@ function LoginPage() {
 
     return (
         <section className="bg-white w-screen h-screen flex justify-center items-center">
-            {/* Toast Container */}
-            <ToastContainer />
-
+           
             <div className="items-center text-9xl font-bold text-red-600 p-5 mr-10">
                 <span>PUREBUY</span>
             </div>

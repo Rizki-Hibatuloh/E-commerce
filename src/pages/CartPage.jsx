@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { removeFromCart, updateQuantity } from '../redux/cartSlice';
+import { toast } from 'react-toastify';
 
 function CartPage() {
     const dispatch = useDispatch();
@@ -58,6 +58,36 @@ function CartPage() {
             dispatch(updateQuantity({ productId: itemId, quantity: newQuantity }));
         }
     };
+    //Fungsi Checkout
+     const handleCheckout = () => {
+        if (selectedItems.length === 0) {
+            toast.warn("Please select products before proceeding to checkout", {
+              position: "top-right",
+              autoClose: 2000,
+            });
+            return; 
+          }
+
+        if (!token) {
+          // Jika user belum login, redirect ke login
+          navigate("/login", { state: { from: location.pathname } });
+          toast.warn("You need to log in to proceed to checkout!", {
+            position: "top-right",
+            autoClose: 2000,
+          });
+          return;
+        }
+    
+        toast.info("Processing checkout...", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+    
+        // Delay 2 detik sebelum redirect ke halaman checkout
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      };
 
     useEffect(() => {
         // Redirect jika user tidak login
@@ -156,12 +186,12 @@ function CartPage() {
                     </table>
                     <div className="mt-4 flex justify-between items-center">
                         <h2 className="text-xl font-bold">Total: ${totalPrice.toLocaleString()}</h2>
-                        <Link
-                            to="/"
-                            className="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800"
-                        >
+                        <button
+                            onClick={handleCheckout}
+                            className="ml-4 text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-400  rounded"
+                            >
                             Checkout
-                        </Link>
+                        </button>
                     </div>
                 </div>
             )}

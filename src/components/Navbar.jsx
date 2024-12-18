@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout, selectUser, setUser } from "../redux/authSlice";
 import { setCart } from "../redux/cartSlice";
 import { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
 
 function Navbar() {
     const dispatch = useDispatch();
@@ -135,8 +135,6 @@ function Navbar() {
                     </Link>
                 )}
             </div>
-            {/* Toast Container */}
-            <ToastContainer />
         </header>
     );
 }

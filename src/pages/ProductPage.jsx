@@ -5,8 +5,8 @@ import { addToCart } from "../redux/cartSlice";
 import { FaSpinner } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa"; // Ikon bintang
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
 
 function ProductPage() {
   const { id } = useParams();
@@ -45,7 +45,7 @@ function ProductPage() {
       navigate("/login", { state: { from: location.pathname } });
       toast.warn("You need to log in to add items to the cart!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
       });
       return;
     }
@@ -61,7 +61,7 @@ function ProductPage() {
     dispatch(addToCart(productToAdd));
     toast.success("Item successfully added to cart!", {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 2000,
     });
   };
 
@@ -71,7 +71,7 @@ function ProductPage() {
       navigate("/login", { state: { from: location.pathname } });
       toast.warn("You need to log in to proceed to checkout!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
       });
       return;
     }
@@ -115,9 +115,6 @@ function ProductPage() {
   return (
     <section className="text-gray-600 body-font overflow-hidden">
       <div className="container px-5 py-24 mx-auto">
-        {/* Toast Container */}
-        <ToastContainer />
-
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <img
             alt="ecommerce"
