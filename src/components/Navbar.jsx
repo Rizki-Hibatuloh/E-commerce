@@ -92,15 +92,6 @@ function Navbar() {
                 <div className="relative mx-3 px-5">
                     <Link
                         to="/cart"
-                        onClick={(e) => {
-                            if (cartItemCount === 0) {
-                                e.preventDefault();
-                                toast.warn("Your cart is empty!", {
-                                    position: "top-right",
-                                    autoClose: 3000,
-                                });
-                            }
-                        }}
                         className="hover:text-white text-lg px-4"
                     >
                         <MdOutlineShoppingCart size={24} />
