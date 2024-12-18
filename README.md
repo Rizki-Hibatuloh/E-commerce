@@ -1,5 +1,12 @@
 E-Commerce 
 =====================================
+
+DEMO APPLICATION :
+=====================================
+
+https://purebuy.vercel.app/
+
+=====================================
 Project Overview
 ---------------
 Deskripsi Proyek
@@ -38,3 +45,14 @@ INSTALATION GUIDE
 5. Login dengan akun pengguna yang telah disediakan untuk mengakses fitur-fitur
 
 --------------------
+
+Contributing
+------------
+Jika Anda ingin berkontribusi pada proyek ini, silakan ikuti langkah-langkah berikut:
+
+Fork repositori ini.
+Buat branch baru (git checkout -b feature/feature-name).
+Lakukan perubahan Anda.
+Commit perubahan Anda (git commit -am 'Add feature').
+Push ke branch (git push origin feature/feature-name).
+Kirim Pull Request.
