@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link, useLocation } from 'react-router-dom'; 
 import { login, selectLoading, selectError, selectToken } from '../redux/authSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function LoginPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation(); // Menambahkan useLocation untuk mendapatkan state dari URL
+    const location = useLocation();
 
     // Selectors
     const loading = useSelector(selectLoading);
@@ -16,38 +18,49 @@ function LoginPage() {
     // Local state
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
 
     // Handle form submit
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         if (!username || !password) {
-            setMessage('Username dan password harus diisi');
+            toast.warn('Username and password are required!', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
             return;
         }
-        setMessage('');
+
         dispatch(login({ username, password }));
     };
 
     useEffect(() => {
         if (error) {
-            setMessage('Username atau password salah.');
+            toast.error('Invalid username or password!', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
         } else if (token) {
-            setMessage('Login berhasil!');
+            toast.success('Login successful! Redirecting...', {
+                position: 'top-right',
+                autoClose: 2000,
+            });
 
-            
-            const redirectPath = location.state?.from || '/'; 
-            setTimeout(() => navigate(redirectPath), 1000); // Delay 1 detik sebelum redirect
+            // Redirect to the intended page or home after login
+            const redirectPath = location.state?.from || '/';
+            setTimeout(() => navigate(redirectPath), 2000);
         }
     }, [error, token, navigate, location.state]);
 
     return (
         <section className="bg-white w-screen h-screen flex justify-center items-center">
+            {/* Toast Container */}
+            <ToastContainer />
+
             <div className="items-center text-9xl font-bold text-red-600 p-5 mr-10">
                 <span>PUREBUY</span>
-            </div> 
-            <main className="bg-gray-200 p-10 rounded-2xl shadow-2xl  shadow-black w-[450px] border border-gray-100">
+            </div>
+            <main className="bg-gray-200 p-10 rounded-2xl shadow-2xl shadow-black w-[450px] border border-gray-100">
                 <div className="text-center mb-8">
                     <h2 className="text-4xl font-bold text-gray-500">Welcome</h2>
                     <p className="text-gray-500 mt-2">Sign in to continue</p>
@@ -83,7 +96,6 @@ function LoginPage() {
                     >
                         {loading ? 'Loading...' : 'Login'}
                     </button>
-                    {message && <p className={`mt-4 text-center ${error ? 'text-red-500' : 'text-green-500'}`}>{message}</p>}
                 </form>
 
                 <div className="mt-4 text-center">

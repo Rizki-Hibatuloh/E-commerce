@@ -2,28 +2,22 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { addToCart } from "../redux/cartSlice";
-import PopupMessage from "../components/PopupMessage";
 import { FaSpinner } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa'; // Import ikon bintang
+import { FaStar, FaStarHalfAlt } from "react-icons/fa"; // Ikon bintang
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ProductPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation(); // Untuk mendapatkan URL terakhir
+  const location = useLocation();
 
   const { products, loading, error } = useSelector((state) => state.product);
   const token = useSelector((state) => state.auth.token);
 
   const [quantity, setQuantity] = useState(1);
-  const [isPopupVisible, setPopupVisible] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
-  const [popupType, setPopupType] = useState("success");
-
-  // Untuk popup checkout
-  const [isCheckoutPopupVisible, setCheckoutPopupVisible] = useState(false);
-  const [checkoutMessage, setCheckoutMessage] = useState("");
 
   if (loading)
     return (
@@ -31,6 +25,7 @@ function ProductPage() {
         <FaSpinner className="animate-spin w-10 h-10" />
       </div>
     );
+
   if (error)
     return (
       <div className="flex justify-center items-center p-3">Error: {error}</div>
@@ -39,13 +34,19 @@ function ProductPage() {
   const product = products.find((item) => item.id === parseInt(id));
   if (!product)
     return (
-      <div className="flex justify-center items-center p-3">Product Not Found</div>
+      <div className="flex justify-center items-center p-3">
+        Product Not Found
+      </div>
     );
 
   const handleAddToCart = () => {
     if (!token) {
-      // Jika user belum login, redirect ke login dan simpan URL saat ini
-      navigate('/login', { state: { from: location.pathname } });
+      // Jika user belum login, redirect ke login
+      navigate("/login", { state: { from: location.pathname } });
+      toast.warn("You need to log in to add items to the cart!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -54,30 +55,35 @@ function ProductPage() {
       name: product.title,
       image: product.image,
       price: product.price,
-      quantity
+      quantity,
     };
 
     dispatch(addToCart(productToAdd));
-    setPopupMessage("Item successfully added to cart!");
-    setPopupType("success");
-    setPopupVisible(true);
+    toast.success("Item successfully added to cart!", {
+      position: "top-right",
+      autoClose: 3000,
+    });
   };
 
   const handleCheckout = () => {
     if (!token) {
-      // Jika user belum login, redirect ke login dan simpan URL saat ini
-      navigate('/login', { state: { from: location.pathname } });
+      // Jika user belum login, redirect ke login
+      navigate("/login", { state: { from: location.pathname } });
+      toast.warn("You need to log in to proceed to checkout!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
-    // Tampilkan popup checkout
-    setCheckoutMessage("Processing checkout...");
-    setPopupType("success");
-    setCheckoutPopupVisible(true);
+    toast.info("Processing checkout...", {
+      position: "top-right",
+      autoClose: 2000,
+    });
 
-    // Delay 2 detik sebelum menuju halaman checkout
+    // Delay 2 detik sebelum redirect ke halaman checkout
     setTimeout(() => {
-      navigate("/"); // Menyelesaikan checkout dan redirect
+      navigate("/");
     }, 2000);
   };
 
@@ -89,7 +95,6 @@ function ProductPage() {
     }
   };
 
-  // Fungsi untuk menampilkan bintang rating
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating); // Bintang penuh
     const hasHalfStar = rating % 1 >= 0.5; // Cek apakah ada bintang setengah
@@ -97,11 +102,11 @@ function ProductPage() {
     const stars = [];
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
-        stars.push(<FaStar key={i} className="text-yellow-400" />); // Bintang penuh
+        stars.push(<FaStar key={i} className="text-yellow-400" />);
       } else if (i === fullStars && hasHalfStar) {
-        stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />); // Bintang setengah
+        stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />);
       } else {
-        stars.push(<FaStar key={i} className="text-gray-300" />); // Bintang kosong
+        stars.push(<FaStar key={i} className="text-gray-300" />);
       }
     }
     return stars;
@@ -110,19 +115,8 @@ function ProductPage() {
   return (
     <section className="text-gray-600 body-font overflow-hidden">
       <div className="container px-5 py-24 mx-auto">
-        <PopupMessage
-          message={popupMessage}
-          type={popupType}
-          isVisible={isPopupVisible}
-          onClose={() => setPopupVisible(false)}
-        />
-
-        <PopupMessage
-          message={checkoutMessage}
-          type={popupType}
-          isVisible={isCheckoutPopupVisible}
-          onClose={() => setCheckoutPopupVisible(false)}
-        />
+        {/* Toast Container */}
+        <ToastContainer />
 
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <img
@@ -131,7 +125,6 @@ function ProductPage() {
             src={product.image}
           />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-         
             <div className="flex items-start mb-4 font-semibold">
               <div className="mr-2 text-base py-1 underline underline-offset-4">
                 {product.rating.rate}
@@ -142,8 +135,8 @@ function ProductPage() {
               </div>
               |
               <div className="ml-2 py-1 text-gray-600 text-sm underline underline-offset-4">
-                 {product.rating.count} reviews
-              </div> 
+                {product.rating.count} reviews
+              </div>
             </div>
             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
               {product.title}
@@ -154,7 +147,7 @@ function ProductPage() {
               <div className="flex mr-6 items-center">
                 <span className="title-font font-medium text-2xl text-gray-900">
                   ${product.price}
-                </span> 
+                </span>
               </div>
               <div className="flex items-center gap-4 ml-8">
                 <button
@@ -179,7 +172,7 @@ function ProductPage() {
                   onClick={handleAddToCart}
                   className="text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded"
                 >
-                  <MdOutlineShoppingCart className="w-6 h-6"/>
+                  <MdOutlineShoppingCart className="w-6 h-6" />
                 </button>
                 <button
                   onClick={handleCheckout}
