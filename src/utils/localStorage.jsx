@@ -16,7 +16,7 @@ const localStorageMiddleware = (storeAPI) => (next) => (action) => {
 
   // Simpan informasi login (token dan username)
   if (state.auth) {
-    // Simpan username dan token secara terpisah agar lebih efisien
+ 
     if (state.auth.token) {
       localStorage.setItem('token', state.auth.token);
     }

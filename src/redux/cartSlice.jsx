@@ -14,7 +14,7 @@ const saveCartToLocalStorage = (cart) => {
 
 // Fungsi untuk menghitung jumlah item di keranjang
 const calculateCartItemCount = (products) => {
-  return products.reduce((total, product) => total + product.quantity, 0);
+  return products.length;
 };
 
 // Mengambil cart dari localStorage saat aplikasi pertama kali dimuat
