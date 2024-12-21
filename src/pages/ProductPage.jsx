@@ -1,12 +1,12 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addToCart } from "../redux/cartSlice";
+import { reduceStock, fetchProducts } from "../redux/productSlice";
 import { FaSpinner } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa"; // Ikon bintang
 import { toast } from "react-toastify";
-
 
 function ProductPage() {
   const { id } = useParams();
@@ -18,6 +18,13 @@ function ProductPage() {
   const token = useSelector((state) => state.auth.token);
 
   const [quantity, setQuantity] = useState(1);
+
+  // Fetch products if not loaded
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products]);
 
   if (loading)
     return (
@@ -50,6 +57,14 @@ function ProductPage() {
       return;
     }
 
+    if (product.stock < quantity) {
+      toast.error("Insufficient stock available!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      return;
+    }
+
     const productToAdd = {
       id: product.id,
       name: product.title,
@@ -59,6 +74,8 @@ function ProductPage() {
     };
 
     dispatch(addToCart(productToAdd));
+    dispatch(reduceStock({ productId: product.id, amount: quantity }));
+
     toast.success("Item successfully added to cart!", {
       position: "top-right",
       autoClose: 2000,
@@ -76,6 +93,16 @@ function ProductPage() {
       return;
     }
 
+    if (product.stock < quantity) {
+      toast.error("Insufficient stock available for checkout!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      return;
+    }
+
+    dispatch(reduceStock({ productId: product.id, amount: quantity }));
+
     toast.info("Processing checkout...", {
       position: "top-right",
       autoClose: 2000,
@@ -88,7 +115,7 @@ function ProductPage() {
   };
 
   const handleQuantityChange = (action) => {
-    if (action === "increment" && quantity < 20) {
+    if (action === "increment" && quantity < product.stock) {
       setQuantity(quantity + 1);
     } else if (action === "decrement" && quantity > 1) {
       setQuantity(quantity - 1);
@@ -139,6 +166,9 @@ function ProductPage() {
               {product.title}
             </h1>
             <p className="leading-relaxed">{product.description}</p>
+            <p className="text-gray-700 text-sm mt-4 mb-3">
+              Stock : <span className="font-bold">{product.stock}</span>
+            </p>
 
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex mr-6 items-center">
